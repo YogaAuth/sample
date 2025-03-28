@@ -3,43 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Web Application</title>
+    <title>Advanced Web Application</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f7fc;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            text-align: center;
         }
 
         .container {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
         }
 
         h1 {
+            text-align: center;
             color: #4CAF50;
-            font-size: 2em;
         }
 
-        p {
-            font-size: 1.2em;
-            color: #333;
+        .form-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 75%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
 
         button {
             background-color: #4CAF50;
             color: white;
-            border: none;
             padding: 10px 20px;
+            border: none;
             font-size: 1.1em;
             border-radius: 5px;
             cursor: pointer;
@@ -50,47 +60,160 @@
             background-color: #45a049;
         }
 
-        input[type="text"] {
+        .todo-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            margin: 10px 0;
             padding: 10px;
-            font-size: 1em;
-            width: 100%;
-            border: 1px solid #ccc;
             border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .todo-item p {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .todo-item button {
+            background-color: #f44336;
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: none;
+            color: white;
+            font-size: 1em;
+        }
+
+        .todo-item button:hover {
+            background-color: #e53935;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 1em;
             margin-top: 10px;
         }
 
-        .response {
-            font-size: 1.2em;
-            margin-top: 15px;
-            color: #333;
+        .clear-button {
+            background-color: #ff9800;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .clear-button:hover {
+            background-color: #fb8c00;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Interactive Web Application</h1>
-        <p>Enter your name and click the button to get a personalized greeting.</p>
-        
-        <input type="text" id="nameInput" placeholder="Enter your name" />
-        <button onclick="greetUser()">Greet Me</button>
+        <h1>To-Do List Application</h1>
 
-        <p class="response" id="greetingResponse"></p>
+        <!-- Input Section -->
+        <div class="form-section">
+            <input type="text" id="taskInput" placeholder="Enter a task" />
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <!-- Error Message -->
+        <p id="errorMessage" class="error-message"></p>
+
+        <!-- To-Do List -->
+        <ul id="todoList" class="todo-list"></ul>
+
+        <!-- Clear All Button -->
+        <button class="clear-button" onclick="clearAllTasks()">Clear All Tasks</button>
     </div>
 
     <script>
-        function greetUser() {
-            const name = document.getElementById('nameInput').value;
-            const greetingResponse = document.getElementById('greetingResponse');
+        // Initialize tasks from localStorage if available
+        const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const taskInput = document.getElementById('taskInput');
+        const todoList = document.getElementById('todoList');
+        const errorMessage = document.getElementById('errorMessage');
 
-            if (name.trim() === "") {
-                greetingResponse.innerText = "Please enter a name!";
-                greetingResponse.style.color = "red";
-            } else {
-                greetingResponse.innerText = `Hello, ${name}! Welcome to our website.`;
-                greetingResponse.style.color = "#4CAF50";
+        // Function to add task
+        function addTask() {
+            const taskText = taskInput.value.trim();
+
+            // Display error if input is empty
+            if (taskText === "") {
+                errorMessage.textContent = "Please enter a task!";
+                return;
             }
+
+            // Hide error message
+            errorMessage.textContent = "";
+
+            // Create a new task object
+            const newTask = {
+                id: Date.now(),
+                text: taskText
+            };
+
+            // Add task to array and save to localStorage
+            storedTasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(storedTasks));
+
+            // Render the updated task list
+            renderTasks();
+
+            // Clear input field
+            taskInput.value = "";
         }
+
+        // Function to delete task
+        function deleteTask(taskId) {
+            const updatedTasks = storedTasks.filter(task => task.id !== taskId);
+            localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+            renderTasks();
+        }
+
+        // Function to render all tasks
+        function renderTasks() {
+            // Clear current tasks
+            todoList.innerHTML = "";
+
+            // Render each task
+            storedTasks.forEach(task => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('todo-item');
+
+                const taskText = document.createElement('p');
+                taskText.textContent = task.text;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = function () {
+                    deleteTask(task.id);
+                };
+
+                listItem.appendChild(taskText);
+                listItem.appendChild(deleteButton);
+                todoList.appendChild(listItem);
+            });
+        }
+
+        // Function to clear all tasks
+        function clearAllTasks() {
+            localStorage.removeItem('tasks');
+            storedTasks.length = 0; // Empty the tasks array
+            renderTasks();
+        }
+
+        // Initial render of tasks when the page loads
+        renderTasks();
     </script>
 
 </body>
