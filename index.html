@@ -3,30 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Application</title>
+    <title>Interactive Web Application</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             text-align: center;
-            margin-top: 50px;
         }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
         h1 {
             color: #4CAF50;
+            font-size: 2em;
         }
+
         p {
-            font-size: 18px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .response {
+            font-size: 1.2em;
+            margin-top: 15px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to My Simple Application</h1>
-    <p>This is a basic HTML page displaying a message.</p>
-    <button onclick="changeMessage()">Click Me</button>
+
+    <div class="container">
+        <h1>Interactive Web Application</h1>
+        <p>Enter your name and click the button to get a personalized greeting.</p>
+        
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+        <button onclick="greetUser()">Greet Me</button>
+
+        <p class="response" id="greetingResponse"></p>
+    </div>
 
     <script>
-        function changeMessage() {
-            document.querySelector('p').innerText = 'You clicked the button!';
+        function greetUser() {
+            const name = document.getElementById('nameInput').value;
+            const greetingResponse = document.getElementById('greetingResponse');
+
+            if (name.trim() === "") {
+                greetingResponse.innerText = "Please enter a name!";
+                greetingResponse.style.color = "red";
+            } else {
+                greetingResponse.innerText = `Hello, ${name}! Welcome to our website.`;
+                greetingResponse.style.color = "#4CAF50";
+            }
         }
     </script>
+
 </body>
 </html>
