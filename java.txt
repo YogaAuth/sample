@@ -1,0 +1,44 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class MainPage {
+    
+    public static void main(String[] args) {
+        // Create a JFrame (window) for the application
+        JFrame frame = new JFrame("Basic Application");
+        
+        // Set the default close operation to exit the application
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Set the size of the window
+        frame.setSize(400, 300);
+        
+        // Set the layout manager (using null for manual positioning)
+        frame.setLayout(null);
+        
+        // Create a label and set its text
+        JLabel label = new JLabel("Welcome to the Basic Application!");
+        label.setBounds(100, 50, 200, 30);  // x, y, width, height
+        
+        // Create a button
+        JButton button = new JButton("Click Me!");
+        button.setBounds(150, 120, 100, 30);  // x, y, width, height
+        
+        // Add action listener for the button click
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // When the button is clicked, update the label text
+                label.setText("Hello, you clicked the button!");
+            }
+        });
+        
+        // Add the label and button to the frame
+        frame.add(label);
+        frame.add(button);
+        
+        // Make the window visible
+        frame.setVisible(true);
+    }
+}
